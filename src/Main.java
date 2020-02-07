@@ -10,7 +10,7 @@ public class Main {
 		
 		frame.add(gamepanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setTitle("ENTER NAME");
+		frame.setTitle("Testing Environment");
 		
 		
 		frame.pack();
