@@ -21,7 +21,7 @@ public class Window extends JPanel implements Runnable, KeyListener, MouseListen
 	private Runner runner;
 	public static final EndGoal END = new EndGoal(); 
 	
-	private ArrayList<Obstacle> obstacles;
+	private static ArrayList<Obstacle> obstacles;
 	private Map map;
 
 	/**
@@ -34,7 +34,7 @@ public class Window extends JPanel implements Runnable, KeyListener, MouseListen
 		addKeyListener(this);
 		start();
 		
-		map = new Map(20);
+		map = new Map(10);
 		
 		obstacles = new ArrayList<Obstacle>();
 		
@@ -78,10 +78,10 @@ public class Window extends JPanel implements Runnable, KeyListener, MouseListen
 		//______DO NOT DRAW ABOVE THIS LINE_____//
 		END.draw(g);
 		
-		g.setColor(Color.BLUE);
 		for(int i = 0 ; i < obstacles.size(); i++) {
 			obstacles.get(i).draw(g);
 		}
+		g.setColor(Color.WHITE);
 		for(int i = 0; i < (int)(WIDTH/DIMENSION); i++) {
 			g.drawLine(0, DIMENSION * i, WIDTH, DIMENSION*i);
 		}
@@ -167,6 +167,10 @@ public class Window extends JPanel implements Runnable, KeyListener, MouseListen
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public static ArrayList<Obstacle> getList(){
+		return obstacles;
 	}
 
 }
