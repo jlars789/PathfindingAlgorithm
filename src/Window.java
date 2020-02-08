@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -19,6 +20,9 @@ public class Window extends JPanel implements Runnable, KeyListener, MouseListen
 	
 	private Runner runner;
 	public static final EndGoal END = new EndGoal(); 
+	
+	private ArrayList<Obstacle> obstacles;
+	private Map map;
 
 	/**
 	 * Creates a Window that has a KeyListener
@@ -30,6 +34,18 @@ public class Window extends JPanel implements Runnable, KeyListener, MouseListen
 		addKeyListener(this);
 		start();
 		
+		map = new Map(20);
+		
+		obstacles = new ArrayList<Obstacle>();
+		
+		for(int i = 0; i <  map.getMap().length; i++) {
+			for(int j = 0; j < map.getMap()[i].length; j++) {
+				if(map.getMap()[i][j] == 1) {
+					Obstacle e = new Obstacle(i * DIMENSION, j * DIMENSION);
+					obstacles.add(e);
+				}
+			}
+		}
 		runner = new Runner();
 	}
 	
@@ -48,19 +64,28 @@ public class Window extends JPanel implements Runnable, KeyListener, MouseListen
 		}
 	}
 	
+	/**
+	 * The root of all Graphics
+	 * All objects that are to be drawn on the screen at any time
+	 * must have the Graphics Object passed through this method into their method.
+	 * 
+	 */
+	
 	public void paint(Graphics g) {
 		g.clearRect(0, 0, WIDTH, HEIGHT);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
-		
+		//______DO NOT DRAW ABOVE THIS LINE_____//
 		END.draw(g);
 		
 		g.setColor(Color.BLUE);
-		int dim = 16;
-		for(int i = 0; i < (int)(WIDTH/dim); i++) {
+		for(int i = 0 ; i < obstacles.size(); i++) {
+			obstacles.get(i).draw(g);
+		}
+		for(int i = 0; i < (int)(WIDTH/DIMENSION); i++) {
 			g.drawLine(0, DIMENSION * i, WIDTH, DIMENSION*i);
 		}
-		for(int i = 0; i < (int)(HEIGHT/dim); i++) {
+		for(int i = 0; i < (int)(HEIGHT/DIMENSION); i++) {
 			g.drawLine(DIMENSION * i, 0, DIMENSION*i, HEIGHT);
 		}
 		
@@ -69,12 +94,13 @@ public class Window extends JPanel implements Runnable, KeyListener, MouseListen
 	}
 	
 	/**
-	 * 
+	 * This method handles all logic, and is the root of all actions in the program
+	 * All 
 	 */
 	
 	public void tick() {
 		try {
-			Thread.sleep(16); //sets the rate of the game (1000 / integer) frames per second
+			Thread.sleep(16 * DIMENSION); //sets the rate of the window (1000 / integer) frames per second
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -99,7 +125,11 @@ public class Window extends JPanel implements Runnable, KeyListener, MouseListen
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	/**
+	 * Method that is called initially to start the program
+	 */
+	
 	@Override
 	public void run() {
 		while(running) {
