@@ -14,6 +14,12 @@ public class Runner extends ModRectangle {
 		inVision = new ArrayList<Obstacle>();
 	}
 	
+	/**
+	 * Current Algorithm:
+	 * Checks to see where obstacles are around it. If obstacles are in front, it will move left, if obstacles are to left
+	 * and front, it will move right, if left, right, and front are blocked, it will not move at all.
+	 */
+	
 	public void tick() {
 		
 		boolean[] canMove = {true, true, true}; //left, up, right
