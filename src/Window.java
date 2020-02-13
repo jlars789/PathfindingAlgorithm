@@ -118,9 +118,6 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		return runner;
 	}
 	
-	
-	
-	
 	public void setObstacles()
 	{
 		setObstacles(10);
