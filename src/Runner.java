@@ -25,12 +25,14 @@ public class Runner extends ModRectangle {
 		boolean[] canMove = {true, true, true}; //left, up, right
 		ArrayList<Obstacle> ref = Window.getList();
 		
+		//scans to see if to left and right
 		for(int i = 0; i < ref.size(); i++) {
 			if(Math.abs(ref.get(i).xCoor()-this.xCoor()) <= Window.DIMENSION && Math.abs(ref.get(i).yCoor()-this.yCoor()) == 0) {
 				inVision.add(ref.get(i));
 				if(ref.get(i).xCoor() > xCoor()) canMove[2] = false;
 				else canMove[0] = false;
 			}
+			//scans to see if above or below
 			else if(Math.abs(ref.get(i).yCoor()-this.yCoor()) <= Window.DIMENSION && Math.abs(ref.get(i).xCoor()-this.xCoor()) == 0) {
 				inVision.add(ref.get(i));
 				canMove[1] = false;
