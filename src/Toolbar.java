@@ -5,9 +5,11 @@ import java.awt.Color;
 import java.awt.Button;
 import java.awt.Label;
 import java.awt.TextField;
+import java.awt.Choice;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.TextEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * 
@@ -23,7 +25,7 @@ import java.awt.event.TextEvent;
  * If desired, I could 
  */
 
-public class Toolbar extends JPanel implements ActionListener
+public class Toolbar extends JPanel implements ActionListener, KeyListener
 {
 	private static final int DIMENSION = Window.DIMENSION;
 	private static final int WIDTH = 1024, HEIGHT = 2 * DIMENSION; //Dimensions for Window
@@ -38,6 +40,8 @@ public class Toolbar extends JPanel implements ActionListener
 	private String[] initialButtonNames = {"Start", "Reset", "New Map", "Delete", "Playback: 1"};
 	private Label oddsLabel;
 	private TextField oddsField;
+	private Label algorithmLabel;
+	private Choice algorithmChoice;
 	
 	protected static boolean isAddOn = false;
 	protected static boolean isDeleteOn = true;
@@ -51,6 +55,7 @@ public class Toolbar extends JPanel implements ActionListener
 	public Toolbar(Window window)
 	{
 		super(new FlowLayout());
+		setFocusable(true);
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setBackground(Color.CYAN);
 		
@@ -65,6 +70,7 @@ public class Toolbar extends JPanel implements ActionListener
 			if (i == 2)
 			{
 				oddsLabel = new Label("New Map Odds:");
+				oddsLabel.setBackground(Color.ORANGE);
 				oddsField = new TextField("");
 				oddsField.setPreferredSize(new Dimension(60, 25));
 				add(oddsLabel);
@@ -76,6 +82,8 @@ public class Toolbar extends JPanel implements ActionListener
 		newMap = buttons[2];
 		modObstacle = buttons[3];
 		playback = buttons[4];
+		
+		
 	}
 	/**
 	 * You can drag-delete in 'delete' mode, as you can in 'add' mode.
@@ -94,20 +102,14 @@ public class Toolbar extends JPanel implements ActionListener
 			modObstacle.setEnabled(false);
 			window.editing = false;
 		} 
-		else if (buttonName.equals("Pause"))
+		else if (buttonName.equals("Pause") || buttonName.equals("Reset")) // Stops runner or resets runner position
 		{ 
-			pressed.setLabel("Start");
-			newMap.setEnabled(true);
-			modObstacle.setEnabled(true);
-			window.editing = true;
-		}
-		else if (buttonName.equals("Reset")) // runner put back in initial position
-		{ 
-			window.getRunner().reset();
 			startPause.setLabel("Start");
-			modObstacle.setEnabled(true);
 			newMap.setEnabled(true);
+			modObstacle.setEnabled(true);
 			window.editing = true;
+			if (buttonName.equals("Reset"))
+				window.getRunner().reset();
 		}
 		else if (buttonName.equals("New Map")) // creates new map and repaints Window
 		{ 
@@ -122,9 +124,9 @@ public class Toolbar extends JPanel implements ActionListener
 			{
 				oddsNum = 10;
 			}
-			if (oddsNum < 0)
+			if (oddsNum <= 0)
 				oddsNum = 10;
-			if (oddsNum > 200)
+			else if (oddsNum > 200)
 				oddsNum = 200;
 			
 			oddsField.setText("" + oddsNum);
@@ -177,6 +179,24 @@ public class Toolbar extends JPanel implements ActionListener
 			pressed.setLabel(name);
 		}
 		
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 	

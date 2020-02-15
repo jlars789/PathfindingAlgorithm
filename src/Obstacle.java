@@ -12,5 +12,14 @@ public class Obstacle extends ModRectangle {
 	public void tick() {
 		
 	}
+	public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		else if (o == null || this.getClass() != o.getClass())
+			return false;
+		else
+			return this.x == ((Obstacle)o).xCoor() && this.y == ((Obstacle)o).yCoor();
+	}
 
 }
