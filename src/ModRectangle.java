@@ -37,7 +37,7 @@ public abstract class ModRectangle extends Rectangle {
 	 */
 	
 	public ModRectangle(int x, int y, Color color) {
-		super(x, y, Window.DIMENSION, Window.DIMENSION);
+		super(x, y, Window.dimension, Window.dimension);
 		this.color = color;
 	}
 	
@@ -47,7 +47,7 @@ public abstract class ModRectangle extends Rectangle {
 	 */
 	
 	public ModRectangle(Color color) {
-		super(0, 0, Window.DIMENSION, Window.DIMENSION);
+		super(0, 0, Window.dimension, Window.dimension);
 		this.color = color;
 	}
 	

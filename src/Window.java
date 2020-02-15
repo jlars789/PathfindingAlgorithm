@@ -1,12 +1,17 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.PopupMenu;
+import java.awt.MenuItem;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  * 
@@ -18,7 +23,7 @@ import javax.swing.JPanel;
 
 
 
-public class Window extends JPanel implements Runnable, MouseListener, MouseMotionListener {
+public class Window extends JPanel implements Runnable, MouseListener, MouseMotionListener, ActionListener {
 
 	private static final long serialVersionUID = 8303110920509931321L;
 	
@@ -29,8 +34,10 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	protected int runnerX = 0;
 	protected int runnerY = 0;
 	protected int speed;
+	public static int dimension = 32;
 	public static final int WIDTH = 1024, HEIGHT = 960; //Dimensions for Window
-	public static final int DIMENSION = 32;
+	private PopupMenu menu;
+	private MenuItem menuItem;
 	
 	private Runner runner;
 	public static final EndGoal END = new EndGoal(); 
@@ -48,10 +55,18 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		
+		menu = new PopupMenu();
+		menuItem = new MenuItem("Set default runner reset location");
+		menuItem.setActionCommand("set");
+		menuItem.addActionListener(this);
+		menu.add(menuItem);
+		add(menu);
+		
 		start();
 		
-		setObstacles();
 		runner = new Runner();
+		setObstacles();
 	}
 	
 	public void start() {
@@ -61,101 +76,42 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		thread = new Thread(this);
 		thread.start();
 	}
-	
-	public void stop() {
-		running = false;
-		try {
-			thread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * The root of all Graphics
-	 * All objects that are to be drawn on the screen at any time
-	 * must have the Graphics Object passed through this method into their method.
-	 * 
-	 */
-	
-	public void paint(Graphics g) {
-		g.clearRect(0, 0, WIDTH, HEIGHT);
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
-		//______DO NOT DRAW ABOVE THIS LINE_____//
-		END.draw(g);
-		
-		for(int i = 0 ; i < obstacles.size(); i++) {
-			obstacles.get(i).draw(g);
-		}
-		g.setColor(Color.WHITE);
-		for(int i = 0; i < (int)(WIDTH/DIMENSION); i++) {
-			g.drawLine(0, DIMENSION * i, WIDTH, DIMENSION*i);
-			g.drawLine(DIMENSION * i, 0, DIMENSION*i, HEIGHT);
-		}
-		runner.draw(g);
-	}
-	
-	/**
-	 * This method handles all logic, and is the root of all actions in the program
-	 * All 
-	 */
-	
-	public void tick() {
-		int rate = speed;
-		rate = editing ? 14 : speed; // make editing smoother
-		try {
-			Thread.sleep((16 - rate) * DIMENSION); //sets the rate of the window (1000 / integer) frames per second
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		if (!editing)
-			runner.tick();
-	}
-
-	public Runner getRunner()
-	{
-		return runner;
-	}
-	
-	public void setObstacles()
-	{
-		setObstacles(10);
-	}
-	public void setObstacles(int odds)
-	{
-		map = new Map(odds);
-		obstacles = new ArrayList<Obstacle>();
-		for(int i = 0; i <  map.getMap().length; i++) {
-			for(int j = 0; j < map.getMap()[i].length; j++) {
-				if(map.getMap()[i][j] == 1) {
-					Obstacle e = new Obstacle(i * DIMENSION, j * DIMENSION);
-					obstacles.add(e);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Method that is called initially to start the program
-	 */
 	@Override
-	public void run() {
-		while(running) {
-			tick(); //runs ticks while running is true
-			repaint(); 
-		}
+	public void actionPerformed(ActionEvent e)
+	{
 		
+		if (e.getActionCommand() == "set")
+			runner.setResetLocation(runnerX, runnerY);
 	}
-
+	
+	private void addObstacle(int x, int y)
+	{
+		if (runner.yCoor() != y || runner.xCoor() != x && y != 0)
+		{	
+			Obstacle temp = new Obstacle(x,y);
+			if (!obstacles.contains(temp))
+			obstacles.add(temp);
+		}
+	}
+	
+	private void deleteObstacle(int x, int y)
+	{
+		obstacles.remove(new Obstacle(x, y));
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int x = (e.getX() / DIMENSION) * DIMENSION;
-		int y = (e.getY() / DIMENSION) * DIMENSION;
+		int x = (e.getX() / dimension) * dimension;
+		int y = (e.getY() / dimension) * dimension;
 		
 		if (editing)
 		{
-			if (Toolbar.isAddOn)
+			if (SwingUtilities.isRightMouseButton(e) && y != 0 && !obstacles.contains(new Obstacle(x,y)))
+			{
+				menu.show(this, x + (dimension / 2), y + (dimension / 2));
+				System.out.println("Right mouse button pressed");
+			}
+			else if (Toolbar.isAddOn)
 			{
 				addObstacle(x, y);
 			}
@@ -168,8 +124,8 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	
 	public void mouseDragged(MouseEvent e)
 	{
-		int x = (e.getX() / DIMENSION) * DIMENSION;
-		int y = (e.getY() / DIMENSION) * DIMENSION;
+		int x = (e.getX() / dimension) * dimension;
+		int y = (e.getY() / dimension) * dimension;
 		
 		if (editing)
 		{
@@ -183,94 +139,142 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 			}
 			else if (Toolbar.isDragOn && runnerClicked)
 			{
-				boolean clear = true;
-				for (int i = 0; i < obstacles.size(); i++)
-					if (obstacles.get(i).yCoor() == y && obstacles.get(i).xCoor() == x)
-					{
-						clear = false;
-						break;
-					}
-				if (clear)
-					runner.reset(x, y);
+				if (!obstacles.contains(new Obstacle(x, y)))
+					runner.relocate(x, y);
 			}
 		}
 	}
 	
-	private void deleteObstacle(int x, int y)
-	{
-		if ((runner.yCoor() != y || runner.xCoor() != x) && y != 0)
-		{
-			for (int i = 0; i < obstacles.size(); i++)
-			{
-				if (obstacles.get(i).yCoor() == y && obstacles.get(i).xCoor() == x)
-				{
-					obstacles.remove(i);
-					break;
-				}
-			}
-		}
-	}
-	
-	private void addObstacle(int x, int y)
-	{
-		boolean clear = true;
-		if (runner.yCoor() == y && runner.xCoor() == x || y == 0)
-			clear = false;
-		for (int i = 0; i < obstacles.size(); i++)
-		{
-			if (obstacles.get(i).yCoor() == y && obstacles.get(i).xCoor() == x)
-			{
-				clear = false;
-				break;
-			}
-		}
-		if (clear)
-			obstacles.add(new Obstacle(x, y));
-	}
-	
-	
-	public void mouseMoved(MouseEvent e)
-	{
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		
-		
-	}
-
 	@Override
 	public void mousePressed(MouseEvent e) 
 	{
-		if (Toolbar.isDragOn)
-		{	
-			int x = (e.getX() / DIMENSION) * DIMENSION;
-			int y = (e.getY() / DIMENSION) * DIMENSION;
-			if (runner.yCoor() == y && runner.xCoor() == x)
-			{
-				runnerClicked = true;
-				runnerX = x;
-				runnerY = y;
+		if (Toolbar.isDragOn || SwingUtilities.isRightMouseButton(e))
+		{
+			int x = (e.getX() / dimension) * dimension;
+			int y = (e.getY() / dimension) * dimension;
+			runnerX = x;
+			runnerY = y;
+			if (Toolbar.isDragOn && !SwingUtilities.isRightMouseButton(e))
+			{	
+				runnerClicked = runner.yCoor() == y && runner.xCoor() == x;
 			}
 		}
 	}
-
+	
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		if (runnerClicked)
 			runnerClicked = false;
+	}
+	
+	/**
+	 * The root of all Graphics
+	 * All objects that are to be drawn on the screen at any time
+	 * must have the Graphics Object passed through this method into their method.
+	 * 
+	 */
+	public void paint(Graphics g) {
+		g.clearRect(0, 0, WIDTH, HEIGHT);
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, WIDTH, HEIGHT - HEIGHT % dimension);
+		//______DO NOT DRAW ABOVE THIS LINE_____//
+		END.draw(g);
+		for(int i = 0 ; i < obstacles.size(); i++) {
+			obstacles.get(i).draw(g);
+		}
 		
+		g.setColor(Color.WHITE);
+		for(int i = 0; i < (int)(WIDTH/dimension); i++) {
+			g.drawLine(0, dimension * i, WIDTH, dimension*i);
+			g.drawLine(dimension * i, 0, dimension*i, (int)(HEIGHT - HEIGHT % dimension));
+		}
+		runner.draw(g);
+	}
+	
+	public void reGrid(int dimension)
+	{
+		Window.dimension = dimension;
+		END.reGrid();
+		runner.reGrid(dimension);
+		setObstacles();
+	}
+	/**
+	 * Method that is called initially to start the program
+	 */
+	@Override
+	public void run() {
+		while(running) {
+			tick(); //runs ticks while running is true
+			repaint(); 
+		}	
+	}
+	
+	public void stop() {
+		running = false;
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * This method handles all logic, and is the root of all actions in the program
+	 * All 
+	 */
+	public void tick() {
+		int rate = speed;
+		rate = editing ? 14 : speed; // make editing smoother
+		try {
+			Thread.sleep(rate * dimension); //sets the rate of the window (1000 / integer) frames per second
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		if (!editing)
+			runner.tick();
+	}
+
+	public Runner getRunner()
+	{
+		return runner;
 	}
 	
 	public static ArrayList<Obstacle> getList(){
 		return obstacles;
 	}
+	
+	public void setObstacles()
+	{
+		setObstacles(10);
+	}
+	public void setObstacles(int odds)
+	{
+		map = new Map(odds);
+		obstacles = new ArrayList<Obstacle>();
+		Obstacle runnerPos = new Obstacle(runner.xCoor(), runner.yCoor());
+		for(int i = 0; i <  map.getMap().length; i++) {
+			for(int j = 0; j < map.getMap()[i].length; j++) {
+				if(map.getMap()[i][j] == 1) {
+					Obstacle e = new Obstacle(i * dimension, j * dimension);
+					if (!runnerPos.equals(e))
+						obstacles.add(e);
+				}
+			}
+		}
+	}
+	
+	public void mouseMoved(MouseEvent e){}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {}
+
+	
+
+	
+	
+	
 
 }
