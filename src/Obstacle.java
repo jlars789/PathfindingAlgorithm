@@ -5,7 +5,7 @@ public class Obstacle extends ModRectangle {
 	private static final long serialVersionUID = -1033566932622000064L;
 
 	public Obstacle(int x, int y) {
-		super(x, y, Window.DIMENSION, Window.DIMENSION, Color.DARK_GRAY);
+		super(x, y, Window.dimension, Window.dimension, Color.BLUE);
 	}
 
 	@Override
