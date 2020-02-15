@@ -161,17 +161,17 @@ public class Toolbar extends JPanel implements ActionListener
 			{
 			case 1:
 				mode++;
-				window.speed = 12;
+				window.speed = 7;
 				name += "2";
 				break;
 			case 2:
 				mode++;
-				window.speed = 10;
+				window.speed = 15;
 				name += "3";
 				break;
 			default:
 				mode = 1;
-				window.speed = 16;
+				window.speed = 0;
 				name += "1";
 			}
 			pressed.setLabel(name);

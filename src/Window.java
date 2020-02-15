@@ -57,7 +57,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	public void start() {
 		running = true;
 		editing = true;
-		speed = 16;
+		speed = 0;
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -103,9 +103,9 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	
 	public void tick() {
 		int rate = speed;
-		rate = editing ? 2 : speed; // make editing smoother
+		rate = editing ? 14 : speed; // make editing smoother
 		try {
-			Thread.sleep(rate * DIMENSION); //sets the rate of the window (1000 / integer) frames per second
+			Thread.sleep((16 - rate) * DIMENSION); //sets the rate of the window (1000 / integer) frames per second
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
