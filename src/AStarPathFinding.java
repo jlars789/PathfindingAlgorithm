@@ -152,7 +152,7 @@ public class AStarPathFinding{
     }
   }
 
-  public Object GetPath(){
+  public ArrayList<MoveNode> GetPath(){
     return pathnode;
   }
 
@@ -240,7 +240,7 @@ public class AStarPathFinding{
     
   }
 
-  void ApplyLocalObstacles(Arraylist<Obstacle> LocalOb){
+  public void ApplyLocalObstacles(ArrayList<Obstacle> LocalOb){
     for(int i =0; i< localObs.size(); i++){
       Obstacle e = LocalOb.get(i);
       path[e.xCoor()][e.yCoor()] = 3;

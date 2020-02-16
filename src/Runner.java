@@ -8,12 +8,16 @@ public class Runner extends ModRectangle {
 	private final static Color C = Color.PINK; 
 	private final static int INITIAL_X = 448;
 	private final static int INITIAL_Y = 928;
-	
+        
+	private AStarPathFinding alpha;
 	private ArrayList<Obstacle> inVision;
 	
 	public Runner() {
 		super(INITIAL_X, INITIAL_Y, SIZE, SIZE, C);
 		inVision = new ArrayList<Obstacle>();
+                int[] aleph = {INITIAL_X/Window.DIMENSION,INITIAL_Y/Window.DIMENSION};
+                int[] objective = {0,0};
+                alpha  = new AStarPathFinding(Window.WIDTH/Window.DIMENSION,Window.HEIGHT/Window.DIMENSION,aleph,objective);
 	}
 	
 	/**
@@ -24,33 +28,15 @@ public class Runner extends ModRectangle {
 	
 	public void tick() {
 		
-		boolean[] canMove = {true, true, true}; //left, up, right
 		ArrayList<Obstacle> ref = Window.getList();
-		
-		for(int i = 0; i < ref.size(); i++) {
-			if(Math.abs(ref.get(i).xCoor()-this.xCoor()) <= Window.DIMENSION && Math.abs(ref.get(i).yCoor()-this.yCoor()) == 0) {
-				inVision.add(ref.get(i));
-				if(ref.get(i).xCoor() > xCoor()) canMove[2] = false;
-				else canMove[0] = false;
-			}
-			else if(Math.abs(ref.get(i).yCoor()-this.yCoor()) <= Window.DIMENSION && Math.abs(ref.get(i).xCoor()-this.xCoor()) == 0 && this.yCoor() > ref.get(i).yCoor()) {
-				inVision.add(ref.get(i));
-				canMove[1] = false;
-			}
-		}
-		
-		for(int i = 0; i < inVision.size(); i++) {
-			if(Math.abs(inVision.get(i).xCoor()-this.xCoor()) >= Window.DIMENSION) {
-				inVision.remove(i);
-			}
-		}
-		
-		if(yCoor() > Window.END.getY()) {
-			
-			if(canMove[1]) this.shift(0, -Window.DIMENSION);
-			else if(canMove[0]) this.shift(-Window.DIMENSION, 0);
-			else if(canMove[2]) this.shift(Window.DIMENSION, 0);
-		}		
+                alpha.ApplyLocalObstacles(ref);
+                if(alpha.initConditionsSet()== true){
+                  alpha.run();
+                }
+                ArrayList<MoveNode> Step = alpha.GetPath();
+                int[] absom = {(Step(Step.size()-1).xCoor*Window.DIMENSION),(Step(Step.size()-1).yCoor*Window.DIMENSION)};
+                this.shift(absom[0]-this.xCoor,absom[1]-this.yCoor);
+				
 	}
 	
 	public void reset()
