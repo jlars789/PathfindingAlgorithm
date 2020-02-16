@@ -1,0 +1,22 @@
+Masashi Takahashi
+
+List of all the methods than can be used
+
+Initialization
+-AStarPathFinding();
+-AStarPathFinding(sizex,sizey,startlocation,targetlocation);
+-AStarPathFinding(obstaclemap,startlocation,targetlocation);
+
+Setup
+-SetStart(start location (int[]))
+-SetTarget(target location (int[]))
+-GiveCourseFull(an omnipresent version of the course (int[][]))
+-GiveCourse(a course likely not fully mapped for obstacles (int[][]))
+-SetParent() - will set up parent array if Startloc, area and path arrays have been initialized
+
+Runtime
+-run() -will run the program step by step or all the way through depending on if it is omnipresent
+-getpath() -will return a pathnode arraylist with all the steps in sequential order up until the current iteration
+-ApplyLocalObstacles(local obstacles in an arraylist) - will apply the local obstacles to the path array
+-fillBuffer() -will make all obstacles larger to avoid bumping into them (would reccomend this only for environments with all obstacles mapped)
+-clearAllReset()  -clears path and area array and resets location to start;
