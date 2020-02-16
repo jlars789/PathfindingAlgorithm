@@ -1,3 +1,4 @@
+package Main;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -13,11 +14,15 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import Entity.EndGoal;
+import Entity.Obstacle;
+import Entity.Runner;
+
 /**
  * 
  * @author lucas
  *	NOTES 
- *	- We should really store the obstacles in a tree for fast access.
+ *	- We should really store the EntityList.obstacles in a tree for fast access.
  */
 
 
@@ -39,10 +44,9 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	private PopupMenu menu;
 	private MenuItem menuItem;
 	
-	private Runner runner;
+	private static Runner runner;
 	public static final EndGoal END = new EndGoal(); 
-	
-	private static ArrayList<Obstacle> obstacles;
+
 	private Map map;
 	
 
@@ -72,7 +76,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	public void start() {
 		running = true;
 		editing = true;
-		speed = 0;
+		speed = 16;
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -89,14 +93,14 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		if (runner.yCoor() != y || runner.xCoor() != x && y != 0)
 		{	
 			Obstacle temp = new Obstacle(x,y);
-			if (!obstacles.contains(temp))
-			obstacles.add(temp);
+			if (!EntityList.obstacles.contains(temp))
+			EntityList.obstacles.add(temp);
 		}
 	}
 	
 	private void deleteObstacle(int x, int y)
 	{
-		obstacles.remove(new Obstacle(x, y));
+		EntityList.obstacles.remove(new Obstacle(x, y));
 	}
 	
 	@Override
@@ -106,7 +110,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		
 		if (editing)
 		{
-			if (SwingUtilities.isRightMouseButton(e) && y != 0 && !obstacles.contains(new Obstacle(x,y)))
+			if (SwingUtilities.isRightMouseButton(e) && y != 0 && !EntityList.obstacles.contains(new Obstacle(x,y)))
 			{
 				menu.show(this, x + (dimension / 2), y + (dimension / 2));
 				System.out.println("Right mouse button pressed");
@@ -139,7 +143,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 			}
 			else if (Toolbar.isDragOn && runnerClicked)
 			{
-				if (!obstacles.contains(new Obstacle(x, y)))
+				if (!EntityList.obstacles.contains(new Obstacle(x, y)))
 					runner.relocate(x, y);
 			}
 		}
@@ -179,8 +183,8 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		g.fillRect(0, 0, WIDTH, HEIGHT - HEIGHT % dimension);
 		//______DO NOT DRAW ABOVE THIS LINE_____//
 		END.draw(g);
-		for(int i = 0 ; i < obstacles.size(); i++) {
-			obstacles.get(i).draw(g);
+		for(int i = 0 ; i < EntityList.obstacles.size(); i++) {
+			EntityList.obstacles.get(i).draw(g);
 		}
 		
 		g.setColor(Color.WHITE);
@@ -234,13 +238,9 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 			runner.tick();
 	}
 
-	public Runner getRunner()
+	public static Runner getRunner()
 	{
 		return runner;
-	}
-	
-	public static ArrayList<Obstacle> getList(){
-		return obstacles;
 	}
 	
 	public void setObstacles()
@@ -250,14 +250,14 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	public void setObstacles(int odds)
 	{
 		map = new Map(odds);
-		obstacles = new ArrayList<Obstacle>();
+		EntityList.obstacles = new ArrayList<Obstacle>();
 		Obstacle runnerPos = new Obstacle(runner.xCoor(), runner.yCoor());
 		for(int i = 0; i <  map.getMap().length; i++) {
 			for(int j = 0; j < map.getMap()[i].length; j++) {
 				if(map.getMap()[i][j] == 1) {
 					Obstacle e = new Obstacle(i * dimension, j * dimension);
 					if (!runnerPos.equals(e))
-						obstacles.add(e);
+						EntityList.obstacles.add(e);
 				}
 			}
 		}

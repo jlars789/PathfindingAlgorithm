@@ -1,5 +1,9 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import Main.Toolbar;
+import Main.Window;
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 

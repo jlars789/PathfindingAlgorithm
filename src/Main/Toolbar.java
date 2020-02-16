@@ -1,4 +1,6 @@
+package Main;
 import javax.swing.JPanel;
+
 import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import java.awt.Dimension;
@@ -28,6 +30,7 @@ import java.awt.event.KeyListener;
 
 public class Toolbar extends JPanel implements ActionListener, KeyListener
 {
+	private static final long serialVersionUID = 8589842146747058791L;
 	private static final int DIMENSION = Window.dimension;
 	private static final int WIDTH = 1024, HEIGHT = 2 * DIMENSION; //Dimensions for Window
 	private Window window;
@@ -162,7 +165,7 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 			down.setEnabled(true);
 			window.editing = true;
 			if (buttonName.equals("Reset"))
-				window.getRunner().reset();
+				Window.getRunner().reset();
 		}
 		else if (buttonName.equals("New Map")) // creates new map and repaints Window
 		{ 
@@ -185,7 +188,7 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 			oddsField.setText("" + oddsNum);
 			
 			window.setObstacles(oddsNum);
-			window.getRunner().reset();
+			Window.getRunner().reset();
 			startPause.setLabel("Start");
 			modObstacle.setEnabled(true);
 			window.editing = true;

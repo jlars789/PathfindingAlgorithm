@@ -1,4 +1,8 @@
+package Entity;
 import java.awt.Color;
+
+import Main.ModRectangle;
+import Main.Window;
 
 public class Obstacle extends ModRectangle {
 

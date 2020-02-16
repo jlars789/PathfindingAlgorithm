@@ -1,4 +1,4 @@
-
+package Main;
 public class Map {
 	
 	private int[][] mapArray;

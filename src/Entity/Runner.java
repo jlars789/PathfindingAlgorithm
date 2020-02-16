@@ -1,5 +1,9 @@
+package Entity;
 import java.awt.Color;
-import java.util.ArrayList;
+import Algorithm.*;
+import Main.ModRectangle;
+import Main.Pathfind;
+import Main.Window;
 
 public class Runner extends ModRectangle {
 	
@@ -7,13 +11,15 @@ public class Runner extends ModRectangle {
 	private static final int SIZE = Window.dimension * 1;
 	private final static Color C = Color.PINK; 
 	private static int initialX = Window.WIDTH / 2;//(Window.WIDTH / Window.dimension) * (Window.WIDTH - Window.dimension);
-	private static int initialY = Window.HEIGHT / 2;//(Window.HEIGHT / Window.dimension) * (Window.HEIGHT - Window.dimension);
+	private static int initialY = Window.HEIGHT - Window.dimension;
 	
-	private ArrayList<Obstacle> inVision;
+	private Pathfind path;
+	
+	//private ArrayList<Obstacle> inVision;
 	
 	public Runner() {
 		super(initialX, initialY, SIZE, SIZE, C);
-		inVision = new ArrayList<Obstacle>();
+		path = new TouchBased();
 	}
 	
 	/**
@@ -24,28 +30,15 @@ public class Runner extends ModRectangle {
 	
 	public void tick() {
 		
-		boolean[] canMove = {true, true, true}; //left, up, right
-		ArrayList<Obstacle> ref = Window.getList();
+		path.update();
 		
 		//scans to see if to left and right
-		for(int i = 0; i < ref.size(); i++) {
-			if(Math.abs(ref.get(i).xCoor()-this.xCoor()) <= Window.dimension && Math.abs(ref.get(i).yCoor()-this.yCoor()) == 0) {
-				inVision.add(ref.get(i));
-				if(ref.get(i).xCoor() > xCoor()) canMove[2] = false;
-				else canMove[0] = false;
-			}
-			else if(Math.abs(ref.get(i).yCoor()-this.yCoor()) <= Window.dimension && Math.abs(ref.get(i).xCoor()-this.xCoor()) == 0 && this.yCoor() > ref.get(i).yCoor()) {
-				inVision.add(ref.get(i));
-				canMove[1] = false;
-			}
-		}
 		
-		for(int i = 0; i < inVision.size(); i++) {
-			if(Math.abs(inVision.get(i).xCoor()-this.xCoor()) >= Window.dimension) {
-				inVision.remove(i);
-			}
-		}
 		
+		
+	}
+	
+	public void move(boolean[] canMove) {
 		if(yCoor() > Window.END.getY()) {
 			
 			if(canMove[1]) this.shift(0, -Window.dimension);
@@ -67,13 +60,11 @@ public class Runner extends ModRectangle {
 	
 	public void relocate(int x, int y)
 	{
-		inVision = new ArrayList<Obstacle>();
 		setLocation(x, y);
 	}
 	
 	public void reset()
 	{
-		inVision = new ArrayList<Obstacle>();
 		setLocation(initialX, initialY);
 	}
 	public void setResetLocation(int x, int y)
