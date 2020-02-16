@@ -240,9 +240,9 @@ public class AStarPathFinding{
     
   }
 
-  void ApplyLocalObstacles(){
+  void ApplyLocalObstacles(Arraylist<Obstacle> LocalOb){
     for(int i =0; i< localObs.size(); i++){
-      Obstacle e = localObs.get(i);
+      Obstacle e = LocalOb.get(i);
       path[e.xCoor()][e.yCoor()] = 3;
     }
   }
@@ -269,7 +269,7 @@ public class AStarPathFinding{
     return pos;
   }
 
-  public void fillbuffer(){                            //calculates the heurisitc distance values around the location head
+  public void fillBuffer(){                            //calculates the heurisitc distance values around the location head
     Boolean testw = (true);                     //buffer gen logic is off for sake of creating more natural looking terrain to path around
     Boolean testh = (true);                     //can be fixed by removing code snippet from previous version
     int[] pos =new int[2];
