@@ -133,7 +133,12 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		
 		if (editing)
 		{
-			if (Toolbar.isAddOn)
+			if (runnerClicked)
+			{
+				if (!EntityList.obstacles.contains(new Obstacle(x, y)))
+					runner.relocate(x, y);
+			}
+			else if (Toolbar.isAddOn)
 			{
 				addObstacle(x, y);
 			}
@@ -141,28 +146,17 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 			{
 				deleteObstacle(x, y);
 			}
-			else if (Toolbar.isDragOn && runnerClicked)
-			{
-				if (!EntityList.obstacles.contains(new Obstacle(x, y)))
-					runner.relocate(x, y);
-			}
 		}
 	}
 	
 	@Override
 	public void mousePressed(MouseEvent e) 
 	{
-		if (Toolbar.isDragOn || SwingUtilities.isRightMouseButton(e))
-		{
 			int x = (e.getX() / dimension) * dimension;
 			int y = (e.getY() / dimension) * dimension;
 			runnerX = x;
 			runnerY = y;
-			if (Toolbar.isDragOn && !SwingUtilities.isRightMouseButton(e))
-			{	
-				runnerClicked = runner.yCoor() == y && runner.xCoor() == x;
-			}
-		}
+			runnerClicked = runner.yCoor() == y && runner.xCoor() == x;
 	}
 	
 	@Override
@@ -230,7 +224,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		int rate = speed;
 		rate = editing ? 14 : speed; // make editing smoother
 		try {
-			Thread.sleep(rate * dimension); //sets the rate of the window (1000 / integer) frames per second
+			Thread.sleep(rate * 32); //sets the rate of the window (1000 / integer) frames per second
 			} catch(Exception e) {
 				e.printStackTrace();
 			}

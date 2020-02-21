@@ -53,8 +53,6 @@ public class Runner extends ModRectangle {
 		this.height = dimension;
 		initialX = Window.WIDTH / 2;
 		initialY = (int)((Window.HEIGHT / 2.0) - (Window.HEIGHT / 2.0) % dimension ) ;
-		//this.width = dimension;
-		
 		reset();
 	}
 	
