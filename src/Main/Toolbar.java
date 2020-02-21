@@ -39,9 +39,8 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 	private Button reset;
 	private Button newMap;
 	private Button modObstacle;
-	private Button playback;
-	private Button[] buttons = {startPause, reset, newMap, modObstacle, playback};
-	private String[] initialButtonNames = {"Start", "Reset", "New Map", "Delete", "Playback: 1"};
+	private Button[] buttons = {startPause, reset, newMap, modObstacle};
+	private String[] initialButtonNames = {"Start", "Reset", "New Map", "Delete"};
 	private Label oddsLabel;
 	private TextField oddsField;
 	private JPanel scalePanel;
@@ -91,7 +90,6 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 		reset = buttons[1];
 		newMap = buttons[2];
 		modObstacle = buttons[3];
-		playback = buttons[4];
 		
 		scaleLabel = new Label("Scale:");
 		scaleLabel.setBackground(Color.ORANGE);
@@ -204,29 +202,6 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 			pressed.setLabel("Add");
 			isDeleteOn = false;
 			isAddOn = true;
-		}
-		else if (e.getSource() == playback)
-		{
-			String name = "Playback: ";
-			int mode = Integer.parseInt(buttonName.substring(buttonName.length() - 1));
-			switch (mode)
-			{
-			case 1:
-				mode++;
-				window.speed = 7;
-				name += "2";
-				break;
-			case 2:
-				mode++;
-				window.speed = 15;
-				name += "3";
-				break;
-			default:
-				mode = 1;
-				window.speed = 0;
-				name += "1";
-			}
-			pressed.setLabel(name);
 		}
 		else if (e.getSource() == up)
 		{

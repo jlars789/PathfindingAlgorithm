@@ -18,16 +18,12 @@ import Entity.EndGoal;
 import Entity.Obstacle;
 import Entity.Runner;
 
+
 /**
+ * Represents the 
  * 
- * @author lucas
- *	NOTES 
- *	- We should really store the EntityList.obstacles in a tree for fast access.
+ *
  */
-
-
-
-
 public class Window extends JPanel implements Runnable, MouseListener, MouseMotionListener, ActionListener {
 
 	private static final long serialVersionUID = 8303110920509931321L;
@@ -38,7 +34,6 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	protected boolean runnerClicked = false;
 	protected int runnerX = 0;
 	protected int runnerY = 0;
-	protected int speed;
 	public static int dimension = 32;
 	public static final int WIDTH = 1024, HEIGHT = 960; //Dimensions for Window
 	private PopupMenu menu;
@@ -76,7 +71,6 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	public void start() {
 		running = true;
 		editing = true;
-		speed = 16;
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -221,8 +215,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	 * All 
 	 */
 	public void tick() {
-		int rate = speed;
-		rate = editing ? 14 : speed; // make editing smoother
+		int rate = editing ? 2 : 16; // make editing smoother
 		try {
 			Thread.sleep(rate * 32); //sets the rate of the window (1000 / integer) frames per second
 			} catch(Exception e) {
