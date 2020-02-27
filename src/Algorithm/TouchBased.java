@@ -3,21 +3,20 @@ import java.util.ArrayList;
 
 import Entity.Obstacle;
 import Entity.Runner;
-import Main.EntityList;
 import Main.MoveNode;
 import Main.Pathfind;
 import Main.Window;
 
-public class TouchBased implements Pathfind {
+public class TouchBased extends Pathfind {
 
+	private ArrayList<Obstacle> ref;
+	
 	public TouchBased() {
 	}
 
 	@Override
-	public void update() {
+	public void update(Runner runRef) {
 		
-		ArrayList<Obstacle> ref = EntityList.obstacles;
-		Runner runRef = Window.getRunner();
 		boolean[] canMove = {true, true, true}; //left, up, right
 		
 		
@@ -45,6 +44,23 @@ public class TouchBased implements Pathfind {
 	public MoveNode giveNext() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setObstacleList(ArrayList<Obstacle> obs) {
+		this.ref = obs;
+		
+	}
+
+	@Override
+	public ArrayList<Obstacle> getObstacleList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getName() {
+		return "TouchBased";
 	}
 
 }

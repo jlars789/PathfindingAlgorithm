@@ -1,6 +1,8 @@
 package Entity;
 import java.awt.Color;
-import Algorithm.*;
+import java.util.ArrayList;
+
+import Main.EntityList;
 import Main.ModRectangle;
 import Main.Pathfind;
 import Main.Window;
@@ -14,12 +16,23 @@ public class Runner extends ModRectangle {
 	private static int initialY = Window.HEIGHT - Window.dimension;
 	
 	private Pathfind path;
+	private boolean inSimulation;
 	
 	//private ArrayList<Obstacle> inVision;
 	
-	public Runner() {
+	
+	public Runner(Pathfind p, boolean inSim) {
 		super(initialX, initialY, SIZE, SIZE, C);
-		path = new TouchBased();
+		this.inSimulation = inSim;
+		path = p;
+		
+		if(!inSim) {
+			p.setObstacleList(EntityList.obstacles);
+		}
+	}
+	
+	public Runner(Pathfind p) {
+		this(p, false);
 	}
 	
 	/**
@@ -30,7 +43,7 @@ public class Runner extends ModRectangle {
 	
 	public void tick() {
 		
-		path.update();
+		path.update(this);
 		
 		//scans to see if to left and right
 		
@@ -73,5 +86,12 @@ public class Runner extends ModRectangle {
 		initialY = y;
 	}
 	
+	public void setAlgorithm(Pathfind p) {
+		path = p;
+	}
+	
+	public void updateAlg(ArrayList<Obstacle> obs) {
+		path.setObstacleList(obs);
+	}
 
 }

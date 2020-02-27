@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import Algorithm.TouchBased;
 import Entity.EndGoal;
 import Entity.Obstacle;
 import Entity.Runner;
@@ -36,13 +37,13 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	public static boolean running;
 	protected boolean editing;
 	protected boolean runnerClicked = false;
-	protected int runnerX = 0;
-	protected int runnerY = 0;
+	protected int[] defLoc = new int[2];
 	protected int speed;
 	public static int dimension = 32;
 	public static final int WIDTH = 1024, HEIGHT = 960; //Dimensions for Window
 	private PopupMenu menu;
 	private MenuItem menuItem;
+	
 	
 	private static Runner runner;
 	public static final EndGoal END = new EndGoal(); 
@@ -67,9 +68,11 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		menu.add(menuItem);
 		add(menu);
 		
+		DataIO.populateArrList();
+		
 		start();
 		
-		runner = new Runner();
+		runner = new Runner(new TouchBased());
 		setObstacles();
 	}
 	
@@ -85,7 +88,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	{
 		
 		if (e.getActionCommand() == "set")
-			runner.setResetLocation(runnerX, runnerY);
+			runner.setResetLocation(defLoc[0], defLoc[1]);
 	}
 	
 	private void addObstacle(int x, int y)
@@ -156,8 +159,8 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		{
 			int x = (e.getX() / dimension) * dimension;
 			int y = (e.getY() / dimension) * dimension;
-			runnerX = x;
-			runnerY = y;
+			defLoc[0] = x;
+			defLoc[1] = y;
 			if (Toolbar.isDragOn && !SwingUtilities.isRightMouseButton(e))
 			{	
 				runnerClicked = runner.yCoor() == y && runner.xCoor() == x;
@@ -215,6 +218,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	
 	public void stop() {
 		running = false;
+		System.out.println("Called");
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
@@ -230,7 +234,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		int rate = speed;
 		rate = editing ? 14 : speed; // make editing smoother
 		try {
-			Thread.sleep(rate * dimension); //sets the rate of the window (1000 / integer) frames per second
+			Thread.sleep(rate * 32); //sets the rate of the window (1000 / integer) frames per second
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
