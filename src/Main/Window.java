@@ -19,16 +19,12 @@ import Entity.EndGoal;
 import Entity.Obstacle;
 import Entity.Runner;
 
+
 /**
+ * Represents the 
  * 
- * @author lucas
- *	NOTES 
- *	- We should really store the EntityList.obstacles in a tree for fast access.
+ *
  */
-
-
-
-
 public class Window extends JPanel implements Runnable, MouseListener, MouseMotionListener, ActionListener {
 
 	private static final long serialVersionUID = 8303110920509931321L;
@@ -79,7 +75,6 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	public void start() {
 		running = true;
 		editing = true;
-		speed = 16;
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -136,7 +131,12 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		
 		if (editing)
 		{
-			if (Toolbar.isAddOn)
+			if (runnerClicked)
+			{
+				if (!EntityList.obstacles.contains(new Obstacle(x, y)))
+					runner.relocate(x, y);
+			}
+			else if (Toolbar.isAddOn)
 			{
 				addObstacle(x, y);
 			}
@@ -144,28 +144,17 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 			{
 				deleteObstacle(x, y);
 			}
-			else if (Toolbar.isDragOn && runnerClicked)
-			{
-				if (!EntityList.obstacles.contains(new Obstacle(x, y)))
-					runner.relocate(x, y);
-			}
 		}
 	}
 	
 	@Override
 	public void mousePressed(MouseEvent e) 
 	{
-		if (Toolbar.isDragOn || SwingUtilities.isRightMouseButton(e))
-		{
 			int x = (e.getX() / dimension) * dimension;
 			int y = (e.getY() / dimension) * dimension;
 			defLoc[0] = x;
 			defLoc[1] = y;
-			if (Toolbar.isDragOn && !SwingUtilities.isRightMouseButton(e))
-			{	
-				runnerClicked = runner.yCoor() == y && runner.xCoor() == x;
-			}
-		}
+			runnerClicked = runner.yCoor() == y && runner.xCoor() == x;
 	}
 	
 	@Override
@@ -231,8 +220,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	 * All 
 	 */
 	public void tick() {
-		int rate = speed;
-		rate = editing ? 14 : speed; // make editing smoother
+		int rate = editing ? 2 : 16; // make editing smoother
 		try {
 			Thread.sleep(rate * 32); //sets the rate of the window (1000 / integer) frames per second
 			} catch(Exception e) {

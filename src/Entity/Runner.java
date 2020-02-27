@@ -16,14 +16,12 @@ public class Runner extends ModRectangle {
 	private static int initialY = Window.HEIGHT - Window.dimension;
 	
 	private Pathfind path;
-	private boolean inSimulation;
 	
 	//private ArrayList<Obstacle> inVision;
 	
 	
 	public Runner(Pathfind p, boolean inSim) {
 		super(initialX, initialY, SIZE, SIZE, C);
-		this.inSimulation = inSim;
 		path = p;
 		
 		if(!inSim) {
@@ -66,8 +64,6 @@ public class Runner extends ModRectangle {
 		this.height = dimension;
 		initialX = Window.WIDTH / 2;
 		initialY = (int)((Window.HEIGHT / 2.0) - (Window.HEIGHT / 2.0) % dimension ) ;
-		//this.width = dimension;
-		
 		reset();
 	}
 	
