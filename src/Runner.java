@@ -18,6 +18,9 @@ public class Runner extends ModRectangle {
                 int[] aleph = {INITIAL_X/Window.DIMENSION,INITIAL_Y/Window.DIMENSION};
                 int[] objective = {0,0};
                 alpha  = new AStarPathFinding(Window.WIDTH/Window.DIMENSION,Window.HEIGHT/Window.DIMENSION,aleph,objective);
+                if(alpha.initConditionsSet()== true){
+                  alpha.run();
+                }
 	}
 	
 	/**
@@ -33,23 +36,26 @@ public class Runner extends ModRectangle {
                 int[] location = {this.xCoor(),this.yCoor()};
                 if(alpha.initConditionsSet()== true){
                   ArrayList<MoveNode> Step = alpha.GetPath();
-                  int[] absom = {(Step.get(Step.size()-1).xCoor()),(Step.get(Step.size()-1).yCoor())};
+                  if(Step.size() > 0){
+                    MoveNode An =  Step.get(Step.size()-1);
+                    int[] absom = {(An.xCoor()),(An.yCoor())};
                   
-                  if(absom.equals(location) == false){
-                    for(int i =0; i < Step.size();i++){
-                      if(location.equals(Step.get(i).pos())){
-                        absom[0] = Step.get(i+1).xCoor() - location[0];
-                        absom[1] = Step.get(i+1).xCoor() - location[1];
-                        break;
+                    if(absom.equals(location) == false){
+                      for(int i =0; i < Step.size();i++){
+                        if(location.equals(Step.get(i).pos())){
+                          absom[0] = Step.get(i+1).xCoor() - location[0];
+                          absom[1] = Step.get(i+1).xCoor() - location[1];
+                          break;
+                        }
                       }
+                    }else{
+                      alpha.run();
+                      Step.clear();
+                      Step.addAll(alpha.GetPath());
+                      absom = Step.get(0).pos();
                     }
-                  }else{
-                    alpha.run();
-                    Step.clear();
-                    Step.addAll(alpha.GetPath());
-                    absom = Step.get(0).pos();
+                    this.shift(absom[0]-this.xCoor(),absom[1]-this.yCoor());
                   }
-                  this.shift(absom[0]-this.xCoor(),absom[1]-this.yCoor());
                 }
                 
                 

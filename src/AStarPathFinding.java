@@ -27,6 +27,7 @@ public class AStarPathFinding{
 
 
   public AStarPathFinding(){
+    pathnode = new ArrayList<MoveNode>();
   }
 
   public AStarPathFinding(int sizex ,int sizey, int[] start, int [] end){
@@ -41,6 +42,8 @@ public class AStarPathFinding{
     startlocinit = true;
     targetinit = true;
     parentinit = true;
+    
+    pathnode = new ArrayList<MoveNode>();
   }
 
   public AStarPathFinding(int[][] course, int[] start, int [] end){
@@ -56,6 +59,8 @@ public class AStarPathFinding{
     targetinit = true;
     parentinit = true;
     omnipresent = true;
+
+    pathnode = new ArrayList<MoveNode>();
   }
 
   public Boolean initConditionsSet(){
@@ -149,7 +154,15 @@ public class AStarPathFinding{
       MoveNode alpha = new MoveNode(location[0],location[1]);
       location = findNextLowest();
       MoveNode beta = new MoveNode(location[0],location[1]);
-      pathnode.addAll(trace(alpha,beta));
+      System.out.println("step complete");
+      System.out.println(location[0] + "" + location[1]);
+      ArrayList<MoveNode> TRa =  trace(alpha,beta);
+      System.out.println("found new path");
+      pathnode.clear();
+      System.out.println("overlaying path");
+      for(int i=0; i< TRa.size(); i++){
+        pathnode.add(TRa.get(i));
+      }
     }else{
       printLine();
     }
@@ -282,9 +295,10 @@ public class AStarPathFinding{
   }
 
   public void ApplyLocalObstacles(ArrayList<Obstacle> LocalOb){
-    for(int i =0; i< localOb.size(); i++){
+    for(int i =0; i< LocalOb.size(); i++){
       Obstacle e = LocalOb.get(i);
-      path[e.xCoor()][e.yCoor()] = 3;
+      
+      path[e.xCoor()/Window.DIMENSION][e.yCoor()/Window.DIMENSION] = 3;
     }
   }
 
