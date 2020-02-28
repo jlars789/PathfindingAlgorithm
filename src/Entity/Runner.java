@@ -89,5 +89,9 @@ public class Runner extends ModRectangle {
 	public void updateAlg(ArrayList<Obstacle> obs) {
 		path.setObstacleList(obs);
 	}
+	
+	public Pathfind getAlgorithm() {
+		return this.path;
+	}
 
 }
