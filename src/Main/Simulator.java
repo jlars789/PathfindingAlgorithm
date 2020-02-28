@@ -2,6 +2,7 @@ package Main;
 
 import java.util.ArrayList;
 
+import Data.AlgData;
 import Entity.*;
 
 public class Simulator implements Runnable {
@@ -28,6 +29,9 @@ public class Simulator implements Runnable {
 		runner = new Runner(p); 
 		tr = new TextReader("seeds.txt");
 		obs = new ArrayList<Obstacle>();
+		t = new Thread(this);
+		AlgData d = new AlgData("TouchBased", 0, 0, 0);
+		DataIO.writeOut(d);
 		//map = new Map(10, tr.getValue()[0]);
 		t = new Thread(this);
 	}
@@ -55,7 +59,8 @@ public class Simulator implements Runnable {
 			map = new Map(10, tr.getValue()[runs]);
 			generateObs();
 			this.runner.updateAlg(obs);
-			for(int i = 0; i < 5; i++) { // 5 was 120
+			for(int i = 0; i < 100; i++) {
+
 				runner.tick();
 				if(runner.intersects(eg)){
 					moveTotal[runs] = i;
@@ -69,8 +74,26 @@ public class Simulator implements Runnable {
 				}
 			}
 			
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			runs++;
-			if(runs > 999) running = false;
+			if(runs > 999) {
+				int su = 0;
+				for(int i = 0; i < successTotal.length; i++) {
+					if(successTotal[i])su++;
+				}
+				int to = 0;
+				for(int i = 0; i < moveTotal.length; i++) {
+					to += moveTotal[i];
+				}
+				DataIO.modifyData("TouchBased", runs, to, su);
+				DataIO.saveAll(); //change later to specify what to write for optimization
+				running = false;
+			}
 		}
 		
 	}
