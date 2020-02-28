@@ -30,12 +30,29 @@ public class Runner extends ModRectangle {
 		
 		ArrayList<Obstacle> ref = Window.getList();
                 alpha.ApplyLocalObstacles(ref);
+                int[] location = {this.xCoor(),this.yCoor()};
                 if(alpha.initConditionsSet()== true){
-                  alpha.run();
+                  ArrayList<MoveNode> Step = alpha.GetPath();
+                  int[] absom = {(Step.get(Step.size()-1).xCoor()),(Step.get(Step.size()-1).yCoor())};
+                  
+                  if(absom.equals(location) == false){
+                    for(int i =0; i < Step.size();i++){
+                      if(location.equals(Step.get(i).pos())){
+                        absom[0] = Step.get(i+1).xCoor() - location[0];
+                        absom[1] = Step.get(i+1).xCoor() - location[1];
+                        break;
+                      }
+                    }
+                  }else{
+                    alpha.run();
+                    Step.clear();
+                    Step.addAll(alpha.GetPath());
+                    absom = Step.get(0).pos();
+                  }
+                  this.shift(absom[0]-this.xCoor(),absom[1]-this.yCoor());
                 }
-                ArrayList<MoveNode> Step = alpha.GetPath();
-                int[] absom = {(Step(Step.size()-1).xCoor*Window.DIMENSION),(Step(Step.size()-1).yCoor*Window.DIMENSION)};
-                this.shift(absom[0]-this.xCoor,absom[1]-this.yCoor);
+                
+                
 				
 	}
 	

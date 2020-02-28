@@ -16,7 +16,10 @@ public class MoveNode extends ModRectangle{
 
    }
 
-
+   int[] pos(){
+     int[] alpha = {this.xCoor(),this.yCoor()};
+     return alpha;
+   }
 
 
 }

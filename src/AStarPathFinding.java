@@ -16,6 +16,7 @@ public class AStarPathFinding{
   public ArrayList<MoveNode> pathnode;
   public ArrayList<MoveNode> keynode;
   public ArrayList<Obstacle> localObs;
+  public ArrayList<MoveNode> localtrace;
 
   private Boolean pathinit = false;
   private Boolean areainit = false;
@@ -145,8 +146,10 @@ public class AStarPathFinding{
     if(path[target[0]][target[1]] < 1){           //case is testing for whether the path has already crossed over target
       path[location[0]][location[1]] = 2;
       fillNextStep();
+      MoveNode alpha = new MoveNode(location[0],location[1]);
       location = findNextLowest();
-      pathnode.add(new MoveNode(location[0],location[1]));
+      MoveNode beta = new MoveNode(location[0],location[1]);
+      pathnode.addAll(trace(alpha,beta));
     }else{
       printLine();
     }
@@ -154,6 +157,44 @@ public class AStarPathFinding{
 
   public ArrayList<MoveNode> GetPath(){
     return pathnode;
+  }
+
+  public ArrayList<MoveNode> trace(MoveNode a,MoveNode b){
+    ArrayList<MoveNode> startone = new ArrayList<MoveNode>();
+    startone.add(a);
+    int[] loca = new int[2];
+    ArrayList<MoveNode> starttwo = new ArrayList<MoveNode>();
+    starttwo.add(b);
+    int[] locb = new int[2];
+    ArrayList<MoveNode> finalstitcha = new ArrayList<MoveNode>();
+    ArrayList<MoveNode> finalstitchb = new ArrayList<MoveNode>();
+    while(startloc.equals(startone.get(startone.size()-1).pos()) != false){
+      loca[0] = loca[0]+parents[loca[0]][loca[1]][0];
+      loca[1] = loca[1]+parents[loca[0]][loca[1]][1];
+      startone.add(new MoveNode(loca[0],loca[1]));
+    }
+    while(startloc.equals(starttwo.get(starttwo.size()-1).pos()) != false){
+      locb[0] = locb[0]+parents[locb[0]][locb[1]][0];
+      locb[1] = locb[1]+parents[locb[0]][locb[1]][1];
+      starttwo.add(new MoveNode(locb[0],locb[1]));
+    }
+    for(int i =0; i < startone.size(); i++){
+      for(int j =0; j < starttwo.size(); j++){
+        if(startone.get(i).pos().equals(starttwo.get(j).pos())){
+            
+            finalstitcha.addAll(startone.subList(0,i));
+            finalstitchb.addAll(starttwo.subList(0,j));
+            for(int k =1; k <= finalstitchb.size(); k++){ 
+              finalstitcha.add(finalstitchb.get(finalstitchb.size()-i));
+            }
+            break;
+        }
+      }
+      if(finalstitcha.size() > 1){
+        break;
+      }
+    }
+    return finalstitcha;
   }
 
   public void printLine(){                  
@@ -241,7 +282,7 @@ public class AStarPathFinding{
   }
 
   public void ApplyLocalObstacles(ArrayList<Obstacle> LocalOb){
-    for(int i =0; i< localObs.size(); i++){
+    for(int i =0; i< localOb.size(); i++){
       Obstacle e = LocalOb.get(i);
       path[e.xCoor()][e.yCoor()] = 3;
     }
