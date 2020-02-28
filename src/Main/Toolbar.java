@@ -70,6 +70,7 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener, Mous
 	private JComboBox<String> algorithmChoice;
 	private final String[] algorithms = {"a*", "alfalfa", "arte", "bk", "deeber", "Glem" };
 	private Button scoreboard;
+	private Button simulator;
 	
 	protected static boolean isAddOn = false;
 	protected static boolean isDeleteOn = true;
@@ -155,6 +156,13 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener, Mous
 		scoreboard.addActionListener(this);
 		scoreboard.setBackground(Color.ORANGE);
 		add(scoreboard);
+		
+		simulator = new Button("Simulator");
+		simulator.addActionListener(this);
+		simulator.setBackground(Color.ORANGE);
+		add(simulator);
+		
+		
 	}
 	/**
 	 * You can drag-delete in 'delete' mode, as you can in 'add' mode.
@@ -248,6 +256,14 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener, Mous
 				main.hideSB();
 			else
 				main.showSB();				
+		}
+		else if (pressed == simulator)
+		{
+			
+			if (!window.isSimRunning())
+				window.startSim();
+			else
+				window.endSim();
 		}
 	}
 	/*private void addPopupMouseListener(JComboBox box)

@@ -71,6 +71,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		start();
 		
 		runner = new Runner(new TouchBased());
+		sim = new Simulator(new TouchBased());
 		setObstacles();
 	}
 	
@@ -257,7 +258,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		}
 	}
 	
-	public void statSim() {
+	public void startSim() {
 		sim.startSim();
 	}
 	

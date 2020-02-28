@@ -29,6 +29,7 @@ public class Simulator implements Runnable {
 		tr = new TextReader("seeds.txt");
 		obs = new ArrayList<Obstacle>();
 		//map = new Map(10, tr.getValue()[0]);
+		t = new Thread(this);
 	}
 	
 	public Simulator(Pathfind p) {
@@ -54,7 +55,7 @@ public class Simulator implements Runnable {
 			map = new Map(10, tr.getValue()[runs]);
 			generateObs();
 			this.runner.updateAlg(obs);
-			for(int i = 0; i < 120; i++) {
+			for(int i = 0; i < 5; i++) { // 5 was 120
 				runner.tick();
 				if(runner.intersects(eg)){
 					moveTotal[runs] = i;
@@ -62,7 +63,7 @@ public class Simulator implements Runnable {
 					break;
 				}
 				try {
-					Thread.sleep(1);
+					Thread.sleep(0);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -75,7 +76,6 @@ public class Simulator implements Runnable {
 	}
 	
 	public void startSim() {
-		t = new Thread(this);
 		t.start();
 	}
 	

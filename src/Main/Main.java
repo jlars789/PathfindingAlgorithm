@@ -78,7 +78,7 @@ public class Main
 		superPanel.remove(sb);
 		superPanel.validate();
 	
-		frame.setSize(new Dimension(1035, 1000));
+		frame.setSize(new Dimension(1035, 1050));
 		frame.validate();
 	}
 	public void showSB()
@@ -87,7 +87,7 @@ public class Main
 		superPanel.add(rigid);
 		superPanel.validate();
  
-		frame.setSize(new Dimension(1540, 1000));
+		frame.setSize(new Dimension(1540, 1050));
 		frame.validate();
 	}
 	public boolean hasSB()
