@@ -1,7 +1,11 @@
 package Main;
+
 import javax.swing.JPanel;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 
 import java.awt.FlowLayout;
+import java.awt.Frame;
+
 import javax.swing.BoxLayout;
 import java.awt.Dimension;
 import java.awt.Color;
@@ -9,10 +13,22 @@ import java.awt.Button;
 import java.awt.Label;
 import java.awt.TextField;
 import java.awt.Choice;
+import javax.swing.JComboBox;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import Main.Main;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
+import javax.swing.plaf.basic.BasicComboPopup;
+import javax.swing.plaf.basic.BasicComboBoxUI;
+
+
 
 /**
  * 
@@ -28,12 +44,13 @@ import java.awt.event.KeyListener;
  * If desired, I could 
  */
 
-public class Toolbar extends JPanel implements ActionListener, KeyListener
+public class Toolbar extends JPanel implements ActionListener, KeyListener, MouseListener
 {
 	private static final long serialVersionUID = 8589842146747058791L;
 	private static final int DIMENSION = Window.dimension;
 	private static final int WIDTH = 1024, HEIGHT = 2 * DIMENSION; //Dimensions for Window
 	private Window window;
+	private Main main;
 	
 	private Button startPause; 
 	private Button reset;
@@ -50,7 +67,9 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 	private Button down;
 	private TextField scaleField;
 	private Label algorithmLabel;
-	private Choice algorithmChoice;
+	private JComboBox<String> algorithmChoice;
+	private final String[] algorithms = {"a*", "alfalfa", "arte", "bk", "deeber", "Glem" };
+	private Button scoreboard;
 	
 	protected static boolean isAddOn = false;
 	protected static boolean isDeleteOn = true;
@@ -61,14 +80,17 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 		System.exit(0);
 	}
 	
-	public Toolbar(Window window)
+	public Toolbar(Window window, Main main)
 	{
 		super(new FlowLayout());
 		setFocusable(true);
-		setPreferredSize(new Dimension(WIDTH, HEIGHT));
-		setBackground(Color.CYAN);
+		setPreferredSize(new Dimension(WIDTH, HEIGHT -20));
+		setMaximumSize(getPreferredSize());
+		//setMinimumSize(new Dimension(WIDTH, HEIGHT -10));
+		setBackground(Color.DARK_GRAY);
 		
 		this.window = window;
+		this.main = main;
 		
 		for (int i = 0; i < buttons.length; i++)
 		{
@@ -123,17 +145,16 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 		algorithmLabel.setBackground(Color.ORANGE);
 		add(algorithmLabel);
 		
-		algorithmChoice = new Choice();
+		algorithmChoice = new JComboBox<String>(algorithms);//Choice();
 		algorithmChoice.setBackground(Color.WHITE);
+		//addPopupMouseListener(algorithmChoice);
 		algorithmChoice.addKeyListener(this);
-		algorithmChoice.add("a*");
-		algorithmChoice.add("alfalfa");
-		algorithmChoice.add("JUST");
-		algorithmChoice.add("AN");
-		algorithmChoice.add("EXAMPLE");
-		algorithmChoice.add(":)");
 		add(algorithmChoice);
 		
+		scoreboard = new Button("Score Board");
+		scoreboard.addActionListener(this);
+		scoreboard.setBackground(Color.ORANGE);
+		add(scoreboard);
 	}
 	/**
 	 * You can drag-delete in 'delete' mode, as you can in 'add' mode.
@@ -141,7 +162,7 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) 
-	{
+	{	
 		Button pressed = (Button) e.getSource();
 		String buttonName = pressed.getLabel();
 		
@@ -203,7 +224,7 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 			isDeleteOn = false;
 			isAddOn = true;
 		}
-		else if (e.getSource() == up)
+		else if (pressed == up)
 		{
 			int val = Integer.parseInt(scaleField.getText());
 			if (val < 256)
@@ -212,7 +233,7 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 				window.reGrid(1024/ (val * 2));
 			}
 		}
-		else if (e.getSource() == down)
+		else if (pressed == down)
 		{
 			int val = Integer.parseInt(scaleField.getText());
 			if (val > 4)
@@ -221,9 +242,34 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 				window.reGrid(1024 / (val / 2));
 			}
 		}
-		
+		else if (pressed == scoreboard)
+		{
+			if (main.hasSB())
+				main.hideSB();
+			else
+				main.showSB();				
+		}
 	}
-
+	/*private void addPopupMouseListener(JComboBox box)
+	{
+		try
+		{
+			Field popupInBasicComboBoxUI = BasicComboBoxUI.class.getDeclaredField("popup");
+			popupInBasicComboBoxUI.setAccessible(true);
+			BasicComboPopup popup = (BasicComboPopup) popupInBasicComboBoxUI.get(box.getUI());
+			
+			popup.addMouseListener(this);
+		}
+		catch (NoSuchFieldException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	*/
 	@Override
 	public void keyPressed(KeyEvent arg0) {}
 
@@ -231,6 +277,41 @@ public class Toolbar extends JPanel implements ActionListener, KeyListener
 	public void keyReleased(KeyEvent arg0) {}
 
 	@Override
-	public void keyTyped(KeyEvent arg0) {}
+	public void keyTyped(KeyEvent e) 
+	{
+		
+		//algorithmChoice.transferFocus(); // This is the one
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) 
+	{
+		if (algorithmChoice.hasFocus())
+			algorithmChoice.transferFocus();
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
