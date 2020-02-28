@@ -54,6 +54,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		setMinimumSize(getPreferredSize());
 		
 		menu = new PopupMenu();
 		menuItem = new MenuItem("Set default runner reset location");
