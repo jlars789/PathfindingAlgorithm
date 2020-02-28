@@ -45,6 +45,7 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 	public static final EndGoal END = new EndGoal(); 
 
 	private Map map;
+	private Simulator sim;
 	
 
 	/**
@@ -254,6 +255,18 @@ public class Window extends JPanel implements Runnable, MouseListener, MouseMoti
 				}
 			}
 		}
+	}
+	
+	public void statSim() {
+		sim.startSim();
+	}
+	
+	public void endSim() {
+		sim.stopSim();
+	}
+	
+	public boolean isSimRunning() {
+		return sim.isRunning();
 	}
 	
 	public void mouseMoved(MouseEvent e){}

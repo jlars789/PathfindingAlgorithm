@@ -31,7 +31,7 @@ public class Main
 		panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setBackground(Color.GRAY);
-		panel.setMaximumSize(new Dimension(gamepanel.WIDTH, 1050));
+		panel.setMaximumSize(new Dimension(Window.WIDTH, 1050));
 		superPanel = new JPanel();
 		superPanel.setLayout(new BoxLayout(superPanel, BoxLayout.X_AXIS));
 		superPanel.setBackground(Color.GRAY);
@@ -40,17 +40,19 @@ public class Main
 		tools = new Toolbar(gamepanel, this);
 		sb = new ScoreBoard();
 		
-		panel.add(Box.createRigidArea(new Dimension(0,5)));
+		//panel.add(Box.createRigidArea(new Dimension(0,25)));
 		panel.add(gamepanel);
 		panel.add(Box.createRigidArea(new Dimension(0,5)));
 		panel.add(tools);
-		panel.add(Box.createRigidArea(new Dimension(0,5)));
+		panel.add(Box.createRigidArea(new Dimension(0,50)));
 		
 	
 		superPanel.add(Box.createRigidArea(new Dimension(5,1050)));
 		superPanel.add(panel);
 		superPanel.add(Box.createRigidArea(new Dimension(5,1050)));
 		rigid = Box.createRigidArea(new Dimension(5,1050));
+		
+		frame.setMaximumSize(new Dimension(1035, 1050));
 		
 		frame.add(superPanel);
 		frame.pack();
@@ -76,7 +78,7 @@ public class Main
 		superPanel.remove(sb);
 		superPanel.validate();
 	
-		frame.setSize(new Dimension(1035, 1080));
+		frame.setSize(new Dimension(1035, 1000));
 		frame.validate();
 	}
 	public void showSB()
@@ -85,7 +87,7 @@ public class Main
 		superPanel.add(rigid);
 		superPanel.validate();
  
-		frame.setSize(new Dimension(1540, 1080));
+		frame.setSize(new Dimension(1540, 1000));
 		frame.validate();
 	}
 	public boolean hasSB()

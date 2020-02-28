@@ -6,6 +6,8 @@ import Entity.*;
 
 public class Simulator implements Runnable {
 	
+	private Thread t;
+	
 	private int runs;
 	private int[] moveTotal;
 	private boolean[] successTotal;
@@ -70,6 +72,24 @@ public class Simulator implements Runnable {
 			if(runs > 999) running = false;
 		}
 		
+	}
+	
+	public void startSim() {
+		t = new Thread(this);
+		t.start();
+	}
+	
+	public boolean isRunning() {
+		return t.isAlive();
+	}
+	
+	public void stopSim() {
+		try {
+			t.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void generateObs() {
