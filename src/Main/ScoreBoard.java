@@ -17,6 +17,7 @@ public class ScoreBoard extends JPanel
 {
 	private Label title;
 	private JPanel areas;
+	private Label names;
 	private Label speed;
 	private Label completion;
 	private Label combination;
@@ -47,24 +48,30 @@ public class ScoreBoard extends JPanel
 		
 		add(title, gbc);
 		
+		names = new Label("Algorithm");
+		names.setPreferredSize(new Dimension(120, 25));
+		names.setBackground(Color.GRAY);
+		names.setForeground(Color.ORANGE);
+		names.setAlignment(title.CENTER);
 		speed = new Label("Speed");
-		speed.setPreferredSize(new Dimension(160, 25));
+		speed.setPreferredSize(new Dimension(115, 25));
 		speed.setBackground(Color.GRAY);
 		speed.setForeground(Color.ORANGE);
 		speed.setAlignment(title.CENTER);
 		completion = new Label("Completion");
-		completion.setPreferredSize(new Dimension(150, 25));
+		completion.setPreferredSize(new Dimension(115, 25));
 		completion.setBackground(Color.GRAY);
 		completion.setForeground(Color.ORANGE);
 		completion.setAlignment(title.CENTER);
 		combination = new Label("Overall");
-		combination.setPreferredSize(new Dimension(160, 25));
+		combination.setPreferredSize(new Dimension(120, 25));
 		combination.setBackground(Color.GRAY);
 		combination.setForeground(Color.ORANGE);
 		combination.setAlignment(title.CENTER);
 		
 		areas = new JPanel();
 		areas.setBackground(Color.DARK_GRAY);
+		areas.add(names);
 		areas.add(speed);
 		areas.add(completion);
 		areas.add(combination);

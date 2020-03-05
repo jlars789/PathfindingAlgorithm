@@ -12,6 +12,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+
 
 
 public class Main 
@@ -29,7 +33,7 @@ public class Main
 		
 		frame = new JFrame();
 		panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setLayout(new GridBagLayout());
 		panel.setBackground(Color.GRAY);
 		panel.setMaximumSize(new Dimension(Window.WIDTH, 1050));
 		superPanel = new JPanel();
@@ -40,11 +44,24 @@ public class Main
 		tools = new Toolbar(gamepanel, this);
 		sb = new ScoreBoard();
 		
-		//panel.add(Box.createRigidArea(new Dimension(0,25)));
-		panel.add(gamepanel);
-		panel.add(Box.createRigidArea(new Dimension(0,5)));
-		panel.add(tools);
-		panel.add(Box.createRigidArea(new Dimension(0,50)));
+		GridBagConstraints gbc = new GridBagConstraints();
+		
+		gbc.anchor = GridBagConstraints.PAGE_START;
+		gbc.weighty = 0.1;
+		gbc.insets = new Insets(5, 0, 0, 0);
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		
+		panel.add(gamepanel, gbc);
+	
+		gbc.anchor = GridBagConstraints.PAGE_START;
+		gbc.weighty = 0.1;
+		gbc.insets = new Insets(0, 0, 0, 0);
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		
+		
+		panel.add(tools, gbc);
 		
 	
 		superPanel.add(Box.createRigidArea(new Dimension(5,1050)));
